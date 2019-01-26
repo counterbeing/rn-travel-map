@@ -43,7 +43,7 @@ import L from 'leaflet';
 
 
 export default {
-  name: 'Example',
+  name: 'Map',
   data() {
     return {
       zoom: 13,

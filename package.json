@@ -11,6 +11,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@handsontable/vue": "^3.1.0",
+    "handsontable": "^6.2.2",
     "leaflet": "^1.4.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
