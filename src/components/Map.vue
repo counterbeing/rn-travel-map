@@ -1,76 +1,82 @@
 <template>
-  <div>
-    <div style="height: 100px; overflow: auto;">
-      <p> Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }} </p>
-    </div>
+  <div class='map-container'>
     <l-map
       :zoom="zoom"
       :center="center"
       :options="mapOptions"
-      style="height: 800px"
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
     >
-      <l-tile-layer
-        :url="url"
-        :attribution="attribution"
-      />
-      <l-marker :lat-lng="withPopup">
-        <l-popup>
-          <div @click="innerClick">
-            I am a popup
-            <p v-show="showParagraph">
-              Lorem ipsum dolor sit amet
-            </p>
-          </div>
-        </l-popup>
-      </l-marker>
-      <l-marker :lat-lng="withTooltip">
-        <l-tooltip :options="{permanent: true, interactive: true}">
-          <div @click="innerClick">
-            I am a tooltip
-            <p v-show="showParagraph">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p>
-          </div>
-        </l-tooltip>
+      <l-tile-layer :url="url" :attribution="attribution"/>
+      <l-marker v-for='(place, index) in places'
+        @click='updateInspector(index)'
+        :lat-lng="place.latlng"
+        :key='index'>
       </l-marker>
     </l-map>
+    <inspector v-if='placeIndex' :positions='positions'/>
   </div></template>
 
 <script>
+import Inspector from '@/components/Inspector';
 import L from 'leaflet';
+import store from '../store';
 
 
 export default {
   name: 'Map',
+  components: { Inspector },
   data() {
     return {
-      zoom: 13,
-      center: L.latLng(47.413220, -1.219482),
+      placeIndex: null,
+      zoom: 3,
+      center: L.latLng(35.57369428380629, -97.82369995593741),
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      withPopup: L.latLng(47.413220, -1.219482),
-      withTooltip: L.latLng(47.414220, -1.250482),
-      currentZoom: 11.5,
-      currentCenter: L.latLng(47.413220, -1.219482),
       showParagraph: false,
       mapOptions: {
         zoomSnap: 0.5,
       },
     };
   },
+  computed: {
+    places() {
+      return store.state.places.map(place => ({
+        city: place.city,
+        state: place.state,
+        latlng: L.latLng(place.lat, place.lng),
+      }));
+    },
+    positions() {
+      return store.state.positions.filter(position => position.placeIndex === this.placeIndex);
+    },
+  },
   methods: {
+    updateInspector(placeIndex) {
+      this.placeIndex = placeIndex;
+    },
     zoomUpdate(zoom) {
       this.currentZoom = zoom;
     },
     centerUpdate(center) {
       this.currentCenter = center;
     },
-    innerClick() {},
   },
 }; </script>
 
 <style>
-@import 'http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css';
+@import 'https://unpkg.com/leaflet@1.4.0/dist/leaflet.css';
+.map-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
 </style>
