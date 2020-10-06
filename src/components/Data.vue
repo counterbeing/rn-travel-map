@@ -53,7 +53,7 @@ export default {
       const hot = this.$refs.table.hotInstance;
       // hot.alter('insert_col', 10, 2);
       let places = chain(hot.getData())
-        .map(row => ({ city: row[3], state: row[4] }))
+        .map(row => ({ city: row[5], state: row[6] }))
         .filter(row => row.city !== '')
         .uniqWith(isEqual)
         .value();
