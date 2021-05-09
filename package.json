@@ -16,7 +16,7 @@
     "handsontable": "^6.2.2",
     "leaflet": "^1.4.0",
     "localforage": "^1.7.3",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue2-leaflet": "^1.2.3"
